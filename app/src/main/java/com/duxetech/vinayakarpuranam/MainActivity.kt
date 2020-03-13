@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,25 +16,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     var spinner1 : Spinner? = null
     var contentView : TextView? = null
-    var book = 0
     var chapter = 0
     var txt = ""
 
-    var booktitles = arrayOf("திருஞானசம்பந்தர் தேவாரம் 1",
-        "திருஞானசம்பந்தர் தேவாரம் 2",
-        "திருஞானசம்பந்தர் தேவாரம் 3",
-        "திருநாவுக்கரசர் தேவாரம் 1",
-        "திருநாவுக்கரசர் தேவாரம் 2",
-        "திருநாவுக்கரசர் தேவாரம் 3",
-        "சுந்தரர் தேவாரம்",
-        "மாணிக்கவாசகர் திருவாசகம்")
-
-    val titles = arrayOf("முதல் திருமுறை","இரண்டாம் திருமுறை", "மூன்றாம் திருமுறை", "நான்காம் திருமுறை", "ஐந்தாம் திருமுறை", "ஆறாம் திருமுறை", "ஏழாம் திருமுறை", "எட்டாம் திருமுறை")
-
-
-    val defText = "தென்னாடுடைய சிவனே போற்றி" +
-            "எந்நாட்டவர்க்கும் இறைவா போற்றி!"
-
+    val defText = "*****ஓம் கம் கணபதியே நம*****\n"
 
     lateinit var adapter1 : ArrayAdapter<String>
 
@@ -56,8 +42,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         spinner1!!.adapter = adapter1
 
-
-
         contentView!!.movementMethod = ScrollingMovementMethod()
 
         spinner1!!.onItemSelectedListener
@@ -71,17 +55,34 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
+    var size = 16F
+    var aboutSize = 20F
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         return when (item!!.itemId) {
-            R.id.font -> {
-                Toast.makeText(this, "font", Toast.LENGTH_SHORT).show()
+
+            R.id.increaseFont -> {
+                if (size < 25)
+                size += 1F
+                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
+                Toast.makeText(this,size.toString(),Toast.LENGTH_SHORT).show()
+
+                true
+            }
+            R.id.decreaseFont -> {
+                if (size > 11)
+                size -= 1F
+                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
+                Toast.makeText(this,size.toString(),Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.about -> {
-                Toast.makeText(this, "about", Toast.LENGTH_SHORT).show()
-                contentView!!.text = "karthikriches@gmail.com"
+                contentView!!.text = "developed by  duxetech.com. \n" +
+                        "Android  & iOS app development \n"+
+                        "Contact : \n" +
+                        "karthikriches@gmail.com"
+                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,aboutSize)
                // spinner1!!.visibility = View.GONE
                 true
             }
@@ -113,7 +114,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         loadFiles(position)
+        if (aboutSize!=size)
+            contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
+
         contentView!!.text = txt
+        contentView!!.text = defText+
+                             contentView!!.text+
+                             "\n" + defText
         contentView!!.scrollTo(0,0)
 
     }
