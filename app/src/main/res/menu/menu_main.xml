@@ -10,11 +10,18 @@
     <item
         android:id="@+id/decreaseFont"
         android:orderInCategory="100"
-        android:title="Font --"
+        android:title="Font - -"
         app:showAsAction="never" />
     <item
         android:id="@+id/about"
         android:orderInCategory="100"
-        android:title="About"
+        android:title="Contact"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/share"
+        android:title="Share this app"
+        android:icon="@android:drawable/ic_menu_share"
+        app:showAsAction="never"
+        android:orderInCategory="100"
+        />
 </menu>

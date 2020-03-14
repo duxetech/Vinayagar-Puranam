@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutActivity"
+    android:orientation="vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/aboutTextView"
+        android:text=
+            "developed by  duxetech.\n
+        Android  n iOS app development.\n
+        web : \n
+        www.duxetech.com"
+        android:autoLink="web"
+        android:lineSpacingExtra="5dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:breakStrategy="balanced"
+        android:textAlignment="center"
+        android:layout_marginTop="120dp"
+        android:textColorLink="#2E45C1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/mailTextView"
+        android:text="
+        mail : \n
+        karthikriches@gmail.com \n"
+        android:layout_marginTop="10dp"
+        android:autoLink="email"
+        android:textColorLink="#2E45C1"
+        android:lineSpacingExtra="5dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

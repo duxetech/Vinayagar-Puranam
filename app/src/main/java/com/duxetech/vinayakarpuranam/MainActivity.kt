@@ -1,5 +1,6 @@
 package com.duxetech.vinayakarpuranam
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     val defText = "*****ஓம் கம் கணபதியே நம*****\n"
 
-    lateinit var adapter1 : ArrayAdapter<String>
+    lateinit var adapter2 : ArrayAdapter<String>
 
 
 
@@ -34,13 +35,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinner1 = findViewById(R.id.spinner1)
         contentView = findViewById(R.id.contentView)
 
-        adapter1 = ArrayAdapter(this, android.R.layout.simple_spinner_item,chapters)
+        adapter2 = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item, chapters)
 
-        spinner1!!.setOnItemSelectedListener(this)
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner1!!.onItemSelectedListener = this
 
 
-        spinner1!!.adapter = adapter1
+        spinner1!!.adapter = adapter2
 
         contentView!!.movementMethod = ScrollingMovementMethod()
 
@@ -66,24 +66,26 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 if (size < 25)
                 size += 1F
                 contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
-                Toast.makeText(this,size.toString(),Toast.LENGTH_SHORT).show()
-
                 true
             }
             R.id.decreaseFont -> {
                 if (size > 11)
                 size -= 1F
                 contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
-                Toast.makeText(this,size.toString(),Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.about -> {
-                contentView!!.text = "developed by  duxetech.com. \n" +
-                        "Android  & iOS app development \n"+
-                        "Contact : \n" +
-                        "karthikriches@gmail.com"
-                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,aboutSize)
-               // spinner1!!.visibility = View.GONE
+
+
+                startActivity(Intent(this,AboutActivity::class.java))
+                true
+            }
+            R.id.share -> {
+                var intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_TEXT,"விநாயகர் புராணம் app https://play.google.com/store/apps/details?id=vinayakar.puranam&hl=en_IN")
+                startActivity(Intent.createChooser(intent,
+                "Share via"))
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -114,12 +116,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         loadFiles(position)
-        if (aboutSize!=size)
-            contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
 
-        contentView!!.text = txt
         contentView!!.text = defText+
-                             contentView!!.text+
+                             txt+
                              "\n" + defText
         contentView!!.scrollTo(0,0)
 
