@@ -2,12 +2,15 @@ package com.duxetech.vinayakarpuranam
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 
 class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
-        this.title = "Contact"
-    }
+        var toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        var toolbarTextview : TextView = findViewById(R.id.toolbar_text)
+        toolbarTextview.text = "Contact"
+        setSupportActionBar(toolbar)    }
 }

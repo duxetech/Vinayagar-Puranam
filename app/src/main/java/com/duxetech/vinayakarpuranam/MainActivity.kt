@@ -1,6 +1,7 @@
 package com.duxetech.vinayakarpuranam
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -10,30 +11,48 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.FileNotFoundException
 import java.util.zip.Inflater
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    var spinner1 : Spinner? = null
-    var contentView : TextView? = null
+    lateinit var contentTextView : TextView
+    lateinit var spinner : Spinner
+    var content = ""
     var chapter = 0
-    var txt = ""
-
-    val defText = "*****ஓம் கம் கணபதியே நம*****\n"
-
     lateinit var adapter2 : ArrayAdapter<String>
+    lateinit var nextButton : Button
+    lateinit var previousButton : Button
+    val defText = "*****ஓம் கம் கணபதியே நம*****\n"
+    lateinit var scrollView : ScrollView
 
 
-
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
 
-        loadFiles(chapter)
+        var toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        var toolbarTextview : TextView = findViewById(R.id.toolbar_text)
+        nextButton  = findViewById(R.id.next)
+        previousButton = findViewById(R.id.previous)
+        scrollView = findViewById(R.id.scrollView)
 
-        spinner1 = findViewById(R.id.spinner1)
-        contentView = findViewById(R.id.contentView)
+        toolbarTextview.text = title
+        setSupportActionBar(toolbar)
+
+        contentTextView = findViewById(R.id.contentTextView)
+        spinner = findViewById(R.id.spinner1)
+
+        loadFiles(0)
+
+        contentTextView.text = content
+
+
+
 
         adapter2 = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item, chapters)
 
@@ -42,68 +61,91 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         spinner1!!.adapter = adapter2
 
-        contentView!!.movementMethod = ScrollingMovementMethod()
+        nextButton.setOnClickListener {
+            if ( chapter+1 < chapters.size ) {
 
-        spinner1!!.onItemSelectedListener
+                chapter += 1
+            }
+            else {
+                chapter = 0
 
-        contentView!!.text = txt
+            }
+            loadFiles(chapter)
+            setText()
+            spinner.setSelection(chapter)
+        }
 
+        previousButton.setOnClickListener{
+            if ( chapter > 0 )
+                chapter -= 1
+            loadFiles(chapter)
+            setText()
+            spinner.setSelection(chapter)
+        }
     }
+
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
+
     var size = 16F
-    var aboutSize = 20F
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        return when (item!!.itemId) {
-
+        return when (item.itemId) {
             R.id.increaseFont -> {
                 if (size < 25)
-                size += 1F
-                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
+                    size += 1F
+                contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
                 true
             }
             R.id.decreaseFont -> {
                 if (size > 11)
-                size -= 1F
-                contentView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP,size)
+                    size -= 1F
+                contentTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size)
                 true
             }
             R.id.about -> {
 
 
-                startActivity(Intent(this,AboutActivity::class.java))
+                startActivity(Intent(this, AboutActivity::class.java))
                 true
             }
             R.id.share -> {
                 var intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_TEXT,"விநாயகர் புராணம் app https://play.google.com/store/apps/details?id=vinayakar.puranam&hl=en_IN")
-                startActivity(Intent.createChooser(intent,
-                "Share via"))
+                intent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    "விநாயகர் மந்திரங்கள் app https://play.google.com/store/apps/details?id=vinayagarmantras&hl=en_IN"
+                )
+                startActivity(
+                    Intent.createChooser(
+                        intent,
+                        "Share via"
+                    )
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
+
         }
-     }
+    }
+
     private fun loadFiles(chapter : Int){
 
         val file = "$chapter.txt"
 
         try {
-            txt = application.assets.open(file).bufferedReader().
+            content = application.assets.open(file).bufferedReader().
             use {
                 it.readText()
             }
-
-            //      Log.i("om",txt)
-
-        } catch (e:FileNotFoundException) {
+        } catch (e: FileNotFoundException) {
 
         }
 
@@ -112,19 +154,26 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 
-
-
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        loadFiles(position)
+        chapter = position
+        loadFiles(chapter)
+        setText()
+    }
 
-        contentView!!.text = defText+
-                             txt+
-                             "\n" + defText
-        contentView!!.scrollTo(0,0)
+    fun setText(){
+        contentTextView.text = defText+
+                content+
+                "\n" + defText
+        scrollView.scrollTo(0,0)
+        setImage()
 
     }
 
+    fun setImage() {
 
+        val image = ganesh[chapter]
+        imageView.setImageResource(image)
+    }
 
 
 
