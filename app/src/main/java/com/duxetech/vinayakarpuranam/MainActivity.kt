@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 intent.type = "text/plain"
                 intent.putExtra(
                     Intent.EXTRA_TEXT,
-                    "விநாயகர் மந்திரங்கள் app https://play.google.com/store/apps/details?id=vinayagarmantras&hl=en_IN"
+                    "விநாயகர் புராணம்  app https://play.google.com/store/apps/details?id=com.duxetech.vinayakarpuranam"
                 )
                 startActivity(
                     Intent.createChooser(
